@@ -85,7 +85,7 @@ final class CheckoutController extends Controller
 
         $provider = $app->providers->find($providerId);
         $currency = $items[0]['currency'];
-        $shipping = $this->shippingFlat($app);
+        $shipping = $this->shippingFlat($app, $items);
         $subtotal = array_sum(array_column($items, 'line_total'));
 
         $discountService = new Discounts($app->db);
@@ -169,7 +169,7 @@ final class CheckoutController extends Controller
     {
         $app = $this->app;
         $locale = $app->translator->locale();
-        $shipping = $this->shippingFlat($app);
+        $shipping = $this->shippingFlat($app, $items);
         $methods = $app->payments->availableFor($providerId, $app);
         $subtotal = array_sum(array_column($items, 'line_total'));
 
@@ -195,9 +195,12 @@ final class CheckoutController extends Controller
         ]);
     }
 
-    private function shippingFlat(App $app): int
+    /** No shipping is charged when the cart has nothing physical in it. */
+    private function shippingFlat(App $app, array $items): int
     {
-        return (int) $app->settings->get('shop.shipping_flat', '0');
+        $hasPhysical = (bool) array_filter($items, fn (array $item) => !$item['is_digital']);
+
+        return $hasPhysical ? (int) $app->settings->get('shop.shipping_flat', '0') : 0;
     }
 
     /** @param list<array{offer_id: int}> $items */

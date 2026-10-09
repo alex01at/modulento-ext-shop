@@ -62,6 +62,9 @@ final class ProductType implements OfferType
                 'sku' => $variant['sku'],
                 'price' => Money::input($variant['price'], $locale),
                 'stock' => $variant['stock'],
+                'digital' => $variant['is_digital'],
+                'file_name' => $variant['file_original_name'],
+                'file_bytes' => $variant['file_bytes'],
                 'text' => $variant['texts'],
             ];
         }
@@ -117,7 +120,8 @@ final class ProductType implements OfferType
                 $errors[] = 'shop.error.label';
             }
 
-            $variants[] = ['sku' => $sku, 'price' => (int) $price, 'stock' => $stock < 0 ? 0 : $stock, 'texts' => $texts];
+            $id = isset($raw['id']) && ctype_digit((string) $raw['id']) ? (int) $raw['id'] : null;
+            $variants[] = ['id' => $id, 'sku' => $sku, 'price' => (int) $price, 'stock' => $stock < 0 ? 0 : $stock, 'is_digital' => isset($raw['digital']), 'texts' => $texts];
         }
 
         if ($variants === []) {
@@ -129,7 +133,7 @@ final class ProductType implements OfferType
 
     public function save(int $offerId, array $values, App $app): ?int
     {
-        return (new Variants($app->db))->save($offerId, $values['variants']);
+        return (new Variants($app->db))->save($offerId, $values['variants'], new Downloads($app->db, self::uploadDir($app)));
     }
 
     public function detailData(int $offerId, string $locale, App $app): array
@@ -144,10 +148,19 @@ final class ProductType implements OfferType
                 'id' => $variant['id'],
                 'label' => $variantsService->label($variant, $locale, $default),
                 'price' => $variant['price'],
-                'in_stock' => $variant['stock'] > 0,
+                'is_digital' => $variant['is_digital'],
+                // Stock running out means nothing for a digital variant.
+                'in_stock' => $variant['is_digital'] || $variant['stock'] > 0,
                 'stock' => $variant['stock'],
             ], $stored),
         ];
+    }
+
+    public static function uploadDir(App $app): string
+    {
+        $config = $app->config;
+
+        return ($config['app']['uploads'] ?? $config['app']['root'] . '/var/uploads') . '/shop-downloads';
     }
 
     // core/src/Catalogue/Offers.php and others note: MariaDB's native prepares

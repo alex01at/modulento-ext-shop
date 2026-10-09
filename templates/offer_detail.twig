@@ -16,6 +16,7 @@
                                 <input type="radio" name="variant_id" value="{{ variant.id }}" {{ loop.first ? 'checked' }} {{ variant.in_stock ? '' : 'disabled' }}>
                                 {{ variant.label }} — {{ money(variant.price, type_data.currency) }}
                                 {% if not variant.in_stock %}<small>{{ trans('shop.detail.out_of_stock') }}</small>{% endif %}
+                                {% if variant.is_digital %}<small>{{ trans('shop.detail.digital_hint') }}</small>{% endif %}
                             </label>
                         {% endfor %}
                     </fieldset>
@@ -24,6 +25,7 @@
                     <input type="hidden" name="variant_id" value="{{ only.id }}">
                     <p><strong>{{ money(only.price, type_data.currency) }}</strong>
                         {% if not only.in_stock %}· {{ trans('shop.detail.out_of_stock') }}{% endif %}
+                        {% if only.is_digital %}· {{ trans('shop.detail.digital_hint') }}{% endif %}
                     </p>
                 {% endif %}
 

@@ -5,3 +5,13 @@
 {% if flow_data.shipping > 0 %}
     <p>{{ trans('shop.order.shipping_charged', {amount: money(flow_data.shipping, order.currency)}) }}</p>
 {% endif %}
+{% if flow_data.digital_lines %}
+    <section class="downloads">
+        <h2>{{ trans('shop.download.title') }}</h2>
+        <ul>
+            {% for line in flow_data.digital_lines %}
+                <li><a class="button" href="{{ url('/orders/' ~ order.id ~ '/download/' ~ line.variant_id) }}">{{ trans('shop.download.get', {label: line.label}) }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}

@@ -14,6 +14,23 @@ return [
     'shop.form.stock' => 'Lagerbestand',
     'shop.form.sku' => 'Artikelnummer (SKU)',
     'shop.form.sku_hint' => 'Optional, muss aber eindeutig sein, wenn angegeben.',
+    'shop.form.digital' => 'Digitales Produkt',
+    'shop.form.digital_hint' => 'Kein Versand, kein Lagerbestand - stattdessen ein Download nach der Bezahlung.',
+
+    // Digital downloads
+    'shop.download.file' => 'Datei',
+    'shop.download.save_first' => 'Speichere das Angebot zuerst, dann kannst du die Datei hochladen.',
+    'shop.download.upload_file' => 'Datei hochladen',
+    'shop.download.replace_file' => 'Datei ersetzen',
+    'shop.download.remove_file' => 'Datei entfernen',
+    'shop.download.uploaded' => 'Datei hochgeladen.',
+    'shop.download.removed' => 'Datei entfernt.',
+    'shop.download.error.too_large' => 'Die Datei ist zu groß (maximal 200 MB).',
+    'shop.download.error.upload' => 'Die Datei konnte nicht hochgeladen werden.',
+    'shop.download.error.type' => 'Dieser Dateityp wird nicht unterstützt.',
+    'shop.download.error.storage' => 'Die Datei konnte nicht gespeichert werden.',
+    'shop.download.title' => 'Download',
+    'shop.download.get' => '{label} herunterladen',
 
     'shop.error.price' => 'Mindestens eine Variante braucht einen gültigen Preis.',
     'shop.error.stock' => 'Der Lagerbestand ist ungültig.',
@@ -26,6 +43,7 @@ return [
     'shop.detail.out_of_stock' => 'Nicht vorrätig',
     'shop.detail.quantity' => 'Menge',
     'shop.detail.add_to_cart' => 'In den Warenkorb',
+    'shop.detail.digital_hint' => 'Digitaler Download, sofort nach Bezahlung verfügbar',
     'shop.detail.login_to_buy' => 'Melde dich an, um zu bestellen.',
 
     // Cart
@@ -137,4 +155,9 @@ return [
     'shop.discount.error.value' => 'Der Wert ist ungültig.',
     'shop.discount.error.max_uses' => 'Die maximale Anzahl Einlösungen ist ungültig.',
     'shop.discount.error.min_subtotal_invalid' => 'Der Mindestbestellwert ist ungültig.',
+
+    // Download e-mail
+    'shop.mail.downloads.subject' => 'Deine Downloads zu Bestellung {number}',
+    'shop.mail.downloads.intro' => 'Deine Bestellung {number} ist bezahlt. Du kannst jetzt herunterladen:',
+    'shop.mail.downloads.where' => 'Die Downloads findest du auch jederzeit auf der Bestellseite: {link}',
 ];

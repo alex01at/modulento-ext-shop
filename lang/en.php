@@ -14,6 +14,23 @@ return [
     'shop.form.stock' => 'Stock',
     'shop.form.sku' => 'SKU',
     'shop.form.sku_hint' => 'Optional, but has to be unique if given.',
+    'shop.form.digital' => 'Digital product',
+    'shop.form.digital_hint' => 'No shipping, no stock to run out of - a download after payment instead.',
+
+    // Digital downloads
+    'shop.download.file' => 'File',
+    'shop.download.save_first' => 'Save the offer first, then you can upload the file.',
+    'shop.download.upload_file' => 'Upload file',
+    'shop.download.replace_file' => 'Replace file',
+    'shop.download.remove_file' => 'Remove file',
+    'shop.download.uploaded' => 'File uploaded.',
+    'shop.download.removed' => 'File removed.',
+    'shop.download.error.too_large' => 'The file is too large (200 MB maximum).',
+    'shop.download.error.upload' => 'The file could not be uploaded.',
+    'shop.download.error.type' => 'This file type is not supported.',
+    'shop.download.error.storage' => 'The file could not be stored.',
+    'shop.download.title' => 'Download',
+    'shop.download.get' => 'Download {label}',
 
     'shop.error.price' => 'At least one variant needs a valid price.',
     'shop.error.stock' => 'The stock is not valid.',
@@ -26,6 +43,7 @@ return [
     'shop.detail.out_of_stock' => 'Out of stock',
     'shop.detail.quantity' => 'Quantity',
     'shop.detail.add_to_cart' => 'Add to cart',
+    'shop.detail.digital_hint' => 'Digital download, available right after payment',
     'shop.detail.login_to_buy' => 'Log in to order.',
 
     // Cart
@@ -137,4 +155,9 @@ return [
     'shop.discount.error.value' => 'The value is not valid.',
     'shop.discount.error.max_uses' => 'The maximum number of redemptions is not valid.',
     'shop.discount.error.min_subtotal_invalid' => 'The minimum order value is not valid.',
+
+    // Download e-mail
+    'shop.mail.downloads.subject' => 'Your downloads for order {number}',
+    'shop.mail.downloads.intro' => 'Your order {number} is paid. You can now download:',
+    'shop.mail.downloads.where' => 'You can also find the downloads any time on the order page: {link}',
 ];

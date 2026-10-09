@@ -1,0 +1,11 @@
+{# Plain text: nothing here is HTML-escaped. Blocks: subject, body. #}
+{% block subject %}{{ trans('shop.mail.downloads.subject', {number: order_number}) }}{% endblock %}
+{% block body %}
+{{ trans('shop.mail.downloads.intro', {number: order_number}) }}
+
+{% for label in lines %}- {{ label }}
+{% endfor %}
+{{ trans('shop.mail.downloads.where', {link: order_link}) }}
+
+{{ trans('core.mail.signature') }}
+{% endblock %}

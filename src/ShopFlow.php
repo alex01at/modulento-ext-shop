@@ -118,13 +118,26 @@ final class ShopFlow implements OrderFlow
         return '@shop/order_detail.twig';
     }
 
-    /** @return array{shipping: int, discount_code: ?string, discount_amount: int} kept at order time so a later change to the shipping rate or the discount never alters a placed order */
+    /** @return array{shipping: int, discount_code: ?string, discount_amount: int, digital_lines: list<array{variant_id: int, label: string}>} kept at order time so a later change to the shipping rate or the discount never alters a placed order */
     public function orderDetailData(array $order, string $locale, App $app): array
     {
+        $variantsService = new Variants($app->db);
+        $default = $app->locales->default();
+        $digitalLines = [];
+        if ($order['payment_state'] === 'paid') {
+            foreach ((array) ($order['data']['lines'] ?? []) as $line) {
+                $variant = $variantsService->findWithTexts((int) $line['variant_id']);
+                if ($variant !== null && $variant['is_digital'] && $variant['file_name'] !== null) {
+                    $digitalLines[] = ['variant_id' => $variant['id'], 'label' => $variantsService->label($variant, $locale, $default)];
+                }
+            }
+        }
+
         return [
             'shipping' => (int) ($order['data']['shipping'] ?? 0),
             'discount_code' => $order['data']['discount_code'] ?? null,
             'discount_amount' => (int) ($order['data']['discount_amount'] ?? 0),
+            'digital_lines' => $digitalLines,
         ];
     }
 }

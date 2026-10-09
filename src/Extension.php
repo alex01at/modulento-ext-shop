@@ -48,6 +48,21 @@ final class Extension implements ExtensionContract
             $router->post('/admin/shop/discounts', [AdminDiscountController::class, 'create'], 'shop.settings.manage');
             $router->post('/admin/shop/discounts/{id}/toggle', [AdminDiscountController::class, 'toggle'], 'shop.settings.manage');
             $router->post('/admin/shop/discounts/{id}/delete', [AdminDiscountController::class, 'delete'], 'shop.settings.manage');
+
+            $router->post('/account/shop/variants/{id}/file', [DownloadController::class, 'upload']);
+            $router->post('/account/shop/variants/{id}/file/delete', [DownloadController::class, 'deleteFile']);
+            $router->get('/orders/{id}/download/{variant}', [DownloadController::class, 'download']);
+        });
+
+        // Mails a digital order's download links once it is paid. There is
+        // no core event for "an order was paid" (markPaid() does not fire
+        // one), so this polls instead - the same way Modulento's own
+        // reminder tasks work. order.data.digital_mailed marks one done;
+        // checked again every run rather than only at the 'placed'
+        // transition, since paying can happen well after that (e.g. a bank
+        // transfer) and OrderStateChanged does not fire for it either.
+        $registrar->task('shop.mail_downloads', 5, function (App $app): void {
+            (new DigitalDeliveries($app->db))->mailDue($app);
         });
 
         $registrar->navigation('shop.nav.cart', '/cart');

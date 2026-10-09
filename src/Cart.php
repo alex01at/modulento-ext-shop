@@ -24,12 +24,12 @@ final class Cart
     }
 
     /**
-     * @return list<array{id: int, variant_id: int, offer_id: int, quantity: int, unit_price: int, line_total: int, stock: int, title: string, label: string, path: string, thumb: ?string, currency: string}>
+     * @return list<array{id: int, variant_id: int, offer_id: int, quantity: int, unit_price: int, line_total: int, stock: int, is_digital: bool, title: string, label: string, path: string, thumb: ?string, currency: string}>
      */
     public function items(int $accountId, App $app): array
     {
         $stmt = $this->db->prepare(
-            'SELECT c.id, c.quantity, v.id AS variant_id, v.price, v.stock, v.offer_id,
+            'SELECT c.id, c.quantity, v.id AS variant_id, v.price, v.stock, v.is_digital, v.offer_id,
                     o.currency, t.title, t.slug,
                     i.id AS image_id, i.name AS image_name, i.extension AS image_extension, i.width AS image_width, i.height AS image_height
              FROM x_shop_cart_item c
@@ -73,6 +73,7 @@ final class Cart
                 'unit_price' => $price,
                 'line_total' => $price * $quantity,
                 'stock' => (int) $row['stock'],
+                'is_digital' => (bool) $row['is_digital'],
                 'title' => $row['title'],
                 'label' => $variantsService->label($variant, $app->translator->locale(), $default),
                 'path' => '/offers/' . $row['slug'],
@@ -109,7 +110,7 @@ final class Cart
         $existing = $stmt->fetchColumn();
         $wanted = ($existing !== false ? (int) $existing : 0) + $quantity;
 
-        if ($wanted > $variant['stock']) {
+        if (!$variant['is_digital'] && $wanted > $variant['stock']) {
             return 'shop.cart.error.stock';
         }
 

@@ -29,6 +29,26 @@ somehow holds products from different providers is refused at checkout
 rather than guessed at (see `CheckoutController::singleProviderId()`); nor
 does it try to split one cart into several orders.
 
+**Discount codes** (**Administration → Shop → Rabattcodes**): a flat amount
+or a percentage off the product subtotal, never off shipping, with an
+optional expiry, a maximum number of redemptions and a minimum order value.
+A redemption is taken atomically at checkout and given back if the order is
+later cancelled, the same way stock is. `order_item.unit_price` is unsigned
+in the core, so a discount can never be its own negative line - instead
+`Discounts::apply()` prorates it across the product lines by their share of
+the subtotal, splitting a line into two rows where the reduction does not
+divide evenly by its quantity, so the total is exact to the cent.
+
+**Digital products**: a variant can be marked digital on the offer form
+(**no shipping, no stock to run out of**) and, once saved, gets a file
+uploaded to it on the same page. A cart with nothing physical in it is not
+charged shipping. Once an order is paid, its order page offers a download
+of every digital variant it contains, checked against the order's own
+buyer, payment state and line items - never a public URL - and a scheduled
+task (**Administration → Tasks**, `shop.mail_downloads`, every 5 minutes)
+mails the same links once, since placing an order and an order actually
+being paid are not necessarily the same moment (a bank transfer, for one).
+
 ## Requirements
 
 Modulento 0.47.0 or newer.
@@ -48,9 +68,13 @@ enable the extension.
 
 The extension keeps its data in tables of its own, all starting with
 `x_shop_`: `x_shop_variant` and `x_shop_variant_translation` (reference the
-core's offers, go with them), and `x_shop_cart_item` (references the core's
-accounts and this extension's variants). Removing the package leaves the
-tables in place.
+core's offers, go with them), `x_shop_cart_item` (references the core's
+accounts and this extension's variants), `x_shop_discount` and
+`x_shop_cart_discount`, and the digital-product columns added to
+`x_shop_variant` itself. Removing the package leaves the tables in place.
+A digital variant's file lives outside the web root under
+`var/uploads/shop-downloads/<offerId>/`, next to the file an offer's own
+pictures use the same way.
 
 ## Changing the look
 
