@@ -1,0 +1,25 @@
+{# Included inside the core's offer form. Receives type_data and currency. #}
+{% for index in 0..7 %}
+    {% set variant = type_data.variants[index] ?? {} %}
+    <fieldset>
+        <legend>{{ trans('shop.form.variant', {number: index + 1}) }}</legend>
+        {% if index > 0 %}
+            <p><small>{{ trans('shop.form.variant_optional') }}</small></p>
+        {% endif %}
+
+        {% for code in type_data.locales %}
+            <label for="variant_{{ index }}_label_{{ code }}">{{ trans('shop.form.variant_label') }} ({{ locale_name(code) }})</label>
+            <input id="variant_{{ index }}_label_{{ code }}" name="variant[{{ index }}][text][{{ code }}][label]" value="{{ variant.text[code].label ?? '' }}" maxlength="150" lang="{{ code }}" placeholder="{{ trans('shop.form.variant_label_placeholder') }}" {{ index == 0 ? 'required' }}>
+        {% endfor %}
+
+        <label for="variant_{{ index }}_price">{{ trans('shop.form.price', {currency: currency}) }}</label>
+        <input id="variant_{{ index }}_price" name="variant[{{ index }}][price]" value="{{ variant.price ?? '' }}" inputmode="decimal" {{ index == 0 ? 'required' }}>
+
+        <label for="variant_{{ index }}_stock">{{ trans('shop.form.stock') }}</label>
+        <input id="variant_{{ index }}_stock" name="variant[{{ index }}][stock]" type="number" min="0" max="1000000" value="{{ variant.stock ?? 0 }}">
+
+        <label for="variant_{{ index }}_sku">{{ trans('shop.form.sku') }}</label>
+        <input id="variant_{{ index }}_sku" name="variant[{{ index }}][sku]" value="{{ variant.sku ?? '' }}" maxlength="64">
+        <small>{{ trans('shop.form.sku_hint') }}</small>
+    </fieldset>
+{% endfor %}

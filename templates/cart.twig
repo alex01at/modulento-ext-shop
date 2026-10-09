@@ -1,0 +1,53 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}{{ trans('shop.cart.title') }} – {{ site_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ trans('shop.cart.title') }}</h1>
+
+{% if items is empty %}
+    <p>{{ trans('shop.cart.empty') }}</p>
+    <p><a href="{{ url('/offers') }}">{{ trans('shop.cart.browse') }}</a></p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>{{ trans('shop.cart.product') }}</th>
+                <th>{{ trans('shop.form.price') }}</th>
+                <th>{{ trans('shop.detail.quantity') }}</th>
+                <th>{{ trans('shop.cart.line_total') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>
+                        {% if item.thumb %}<img src="{{ item.thumb }}" alt="" width="48" height="48">{% endif %}
+                        <a href="{{ url(item.path) }}">{{ item.title }}</a> — {{ item.label }}
+                        {% if item.quantity > item.stock %}<br><small>{{ trans('shop.cart.only_left', {count: item.stock}) }}</small>{% endif %}
+                    </td>
+                    <td>{{ money(item.unit_price, item.currency) }}</td>
+                    <td>
+                        <form method="post" action="{{ url('/cart/' ~ item.id ~ '/update') }}" class="inline-form">
+                            {{ csrf_field() }}
+                            <input name="quantity" type="number" min="1" max="99" value="{{ item.quantity }}" style="width:4rem">
+                            <button type="submit">{{ trans('shop.cart.update') }}</button>
+                        </form>
+                    </td>
+                    <td>{{ money(item.line_total, item.currency) }}</td>
+                    <td>
+                        <form method="post" action="{{ url('/cart/' ~ item.id ~ '/remove') }}" class="inline-form">
+                            {{ csrf_field() }}
+                            <button type="submit" class="link-button">{{ trans('shop.cart.remove') }}</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>{{ trans('shop.cart.total') }}: {{ money(total, items[0].currency) }}</strong></p>
+    <p><a class="button" href="{{ url('/checkout') }}">{{ trans('shop.cart.checkout') }}</a></p>
+{% endif %}
+{% endblock %}

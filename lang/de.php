@@ -1,0 +1,98 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'shop.type.product' => 'Produkt',
+
+    // Offer form (one per variant)
+    'shop.form.variant' => 'Variante {number}',
+    'shop.form.variant_optional' => 'Optional - wird nur gespeichert, wenn ein Preis eingetragen ist.',
+    'shop.form.variant_label' => 'Bezeichnung',
+    'shop.form.variant_label_placeholder' => 'z. B. Größe M, Rot',
+    'shop.form.price' => 'Preis ({currency})',
+    'shop.form.stock' => 'Lagerbestand',
+    'shop.form.sku' => 'Artikelnummer (SKU)',
+    'shop.form.sku_hint' => 'Optional, muss aber eindeutig sein, wenn angegeben.',
+
+    'shop.error.price' => 'Mindestens eine Variante braucht einen gültigen Preis.',
+    'shop.error.stock' => 'Der Lagerbestand ist ungültig.',
+    'shop.error.sku' => 'Die Artikelnummer darf nur Buchstaben, Ziffern, „-" und „_" enthalten.',
+    'shop.error.sku_taken' => 'Diese Artikelnummer wird bereits verwendet.',
+    'shop.error.label' => 'Jede Variante braucht eine Bezeichnung in mindestens einer Sprache.',
+
+    // Public product page
+    'shop.detail.choose_variant' => 'Variante wählen',
+    'shop.detail.out_of_stock' => 'Nicht vorrätig',
+    'shop.detail.quantity' => 'Menge',
+    'shop.detail.add_to_cart' => 'In den Warenkorb',
+    'shop.detail.login_to_buy' => 'Melde dich an, um zu bestellen.',
+
+    // Cart
+    'shop.cart.title' => 'Warenkorb',
+    'shop.cart.empty' => 'Dein Warenkorb ist leer.',
+    'shop.cart.browse' => 'Produkte ansehen',
+    'shop.cart.product' => 'Produkt',
+    'shop.cart.line_total' => 'Summe',
+    'shop.cart.total' => 'Gesamtsumme',
+    'shop.cart.update' => 'Aktualisieren',
+    'shop.cart.remove' => 'Entfernen',
+    'shop.cart.checkout' => 'Zur Kasse',
+    'shop.cart.added' => 'In den Warenkorb gelegt.',
+    'shop.cart.removed' => 'Aus dem Warenkorb entfernt.',
+    'shop.cart.only_left' => 'Nur noch {count} auf Lager.',
+    'shop.cart.error.gone' => 'Diese Variante gibt es nicht mehr.',
+    'shop.cart.error.quantity' => 'Die Menge ist ungültig.',
+    'shop.cart.error.stock' => 'Nicht genug auf Lager.',
+
+    // Checkout
+    'shop.checkout.title' => 'Kasse',
+    'shop.checkout.subtotal' => 'Zwischensumme',
+    'shop.checkout.shipping' => 'Versand',
+    'shop.checkout.total' => 'Gesamtsumme',
+    'shop.checkout.submit' => 'Zahlungspflichtig bestellen',
+    'shop.checkout.order_title' => 'Bestellung',
+    'shop.checkout.placed' => 'Bestellung aufgegeben.',
+    'shop.checkout.error.mixed_provider' => 'Dein Warenkorb enthält Produkte von mehr als einem Anbieter - das unterstützt dieser Shop nicht.',
+
+    // Order page
+    'shop.order.shipping_charged' => 'Versand: {amount}',
+
+    // Flow: states, actions, confirmations
+    'shop.state.placed' => 'Wartet auf Versand',
+    'shop.state.shipped' => 'Versendet, wartet auf Bestätigung',
+    'shop.state.cancel_requested' => 'Stornierung angefragt',
+    'shop.state.completed' => 'Abgeschlossen',
+    'shop.state.cancelled' => 'Storniert',
+    'shop.action.ship' => 'Als versendet markieren',
+    'shop.action.accept_delivery' => 'Erhalt bestätigen',
+    'shop.action.auto_complete' => 'Automatisch bestätigt',
+    'shop.action.auto_ship_expire' => 'Nicht rechtzeitig versendet',
+    'shop.action.request_cancel' => 'Stornierung anfragen',
+    'shop.action.agree_cancel' => 'Stornierung zustimmen',
+    'shop.action.refuse_cancel' => 'Stornierung ablehnen',
+    'shop.action.withdraw_cancel' => 'Stornierungsanfrage zurückziehen',
+    'shop.action.admin_cancel' => 'Durch die Plattform stornieren',
+    'shop.done.ship' => 'Versendet',
+    'shop.done.accept_delivery' => 'Erhalt bestätigt',
+    'shop.done.auto_complete' => 'Automatisch bestätigt',
+    'shop.done.auto_ship_expire' => 'Nicht rechtzeitig versendet',
+    'shop.done.request_cancel' => 'Stornierung angefragt',
+    'shop.done.agree_cancel' => 'Stornierung zugestimmt',
+    'shop.done.refuse_cancel' => 'Stornierung abgelehnt',
+    'shop.done.withdraw_cancel' => 'Stornierungsanfrage zurückgezogen',
+    'shop.done.admin_cancel' => 'Durch die Plattform storniert',
+
+    // Navigation, permission
+    'shop.nav.cart' => 'Warenkorb',
+    'shop.permission.settings' => 'Shop-Einstellungen verwalten',
+    'shop.admin.menu.settings' => 'Shop',
+
+    // Admin settings
+    'shop.admin.settings.title' => 'Shop-Einstellungen',
+    'shop.admin.settings.shipping_flat' => 'Versandpauschale ({currency})',
+    'shop.admin.settings.shipping_flat_hint' => 'Wird jeder Bestellung einmal hinzugefügt. Leer oder 0 lässt den Versand kostenlos.',
+    'shop.admin.settings.save' => 'Speichern',
+    'shop.admin.error.shipping' => 'Die Versandpauschale ist ungültig.',
+    'shop.admin.saved' => 'Gespeichert.',
+];

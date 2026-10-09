@@ -1,0 +1,19 @@
+{% extends '@admin/layout.twig' %}
+
+{% block title %}{{ trans('shop.admin.settings.title') }} – {{ site_name }}{% endblock %}
+
+{% block admin %}
+{% include '@admin/_page_header.twig' with {heading: trans('shop.admin.settings.title')} only %}
+
+{% for error in errors %}
+    <p class="flash flash-error" role="alert">{{ error }}</p>
+{% endfor %}
+
+<form method="post" action="{{ url('/admin/shop/settings') }}" class="stack-form">
+    {{ csrf_field() }}
+    <label for="shipping_flat">{{ trans('shop.admin.settings.shipping_flat', {currency: currency}) }}</label>
+    <input id="shipping_flat" name="shipping_flat" value="{{ shipping_flat }}" inputmode="decimal">
+    <small>{{ trans('shop.admin.settings.shipping_flat_hint') }}</small>
+    <button type="submit">{{ trans('shop.admin.settings.save') }}</button>
+</form>
+{% endblock %}

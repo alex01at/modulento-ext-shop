@@ -1,0 +1,4 @@
+{# Included on the order page. Receives flow_data. #}
+{% if flow_data.shipping > 0 %}
+    <p>{{ trans('shop.order.shipping_charged', {amount: money(flow_data.shipping, order.currency)}) }}</p>
+{% endif %}

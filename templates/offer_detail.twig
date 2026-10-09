@@ -1,0 +1,39 @@
+{# Included on the public offer page and in the administration. Receives type_data; "offer" comes from the page it is included in. #}
+{% if type_data.variants %}
+    <section class="variants">
+        {% if offer.is_own is defined and offer.is_own %}
+            {# the provider previewing their own product - no cart form #}
+        {% elseif account is defined and account %}
+            <form method="post" action="{{ url('/cart/add') }}" class="stack-form">
+                {{ csrf_field() }}
+                <input type="hidden" name="return" value="{{ offer.path is defined ? offer.path : '' }}">
+
+                {% if type_data.variants|length > 1 %}
+                    <fieldset>
+                        <legend>{{ trans('shop.detail.choose_variant') }}</legend>
+                        {% for variant in type_data.variants %}
+                            <label>
+                                <input type="radio" name="variant_id" value="{{ variant.id }}" {{ loop.first ? 'checked' }} {{ variant.in_stock ? '' : 'disabled' }}>
+                                {{ variant.label }} — {{ money(variant.price, type_data.currency) }}
+                                {% if not variant.in_stock %}<small>{{ trans('shop.detail.out_of_stock') }}</small>{% endif %}
+                            </label>
+                        {% endfor %}
+                    </fieldset>
+                {% else %}
+                    {% set only = type_data.variants[0] %}
+                    <input type="hidden" name="variant_id" value="{{ only.id }}">
+                    <p><strong>{{ money(only.price, type_data.currency) }}</strong>
+                        {% if not only.in_stock %}· {{ trans('shop.detail.out_of_stock') }}{% endif %}
+                    </p>
+                {% endif %}
+
+                <label for="quantity">{{ trans('shop.detail.quantity') }}</label>
+                <input id="quantity" name="quantity" type="number" min="1" max="99" value="1">
+
+                <button type="submit" class="button">{{ trans('shop.detail.add_to_cart') }}</button>
+            </form>
+        {% else %}
+            <p><a href="{{ url('/login') }}">{{ trans('shop.detail.login_to_buy') }}</a></p>
+        {% endif %}
+    </section>
+{% endif %}
