@@ -52,6 +52,10 @@ final class Extension implements ExtensionContract
             $router->post('/account/shop/variants/{id}/file', [DownloadController::class, 'upload']);
             $router->post('/account/shop/variants/{id}/file/delete', [DownloadController::class, 'deleteFile']);
             $router->get('/orders/{id}/download/{variant}', [DownloadController::class, 'download']);
+
+            $router->get('/account/shop/import', [ImportController::class, 'show']);
+            $router->post('/account/shop/import', [ImportController::class, 'import']);
+            $router->get('/account/shop/import/template', [ImportController::class, 'template']);
         });
 
         // Mails a digital order's download links once it is paid. There is
@@ -66,6 +70,7 @@ final class Extension implements ExtensionContract
         });
 
         $registrar->navigation('shop.nav.cart', '/cart');
+        $registrar->accountLink('shop.nav.import', '/account/shop/import');
 
         $registrar->permission('shop.settings.manage', 'shop.permission.settings');
         $registrar->adminMenu('shop.admin.menu.settings', '/admin/shop/settings', 'shop.settings.manage', 'marketplace');

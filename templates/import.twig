@@ -1,0 +1,62 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}{{ trans('shop.import.title') }} – {{ site_name }}{% endblock %}
+
+{% block content %}
+{% include 'account/_nav.twig' %}
+
+<h1>{{ trans('shop.import.title') }}</h1>
+<p>{{ trans('shop.import.intro') }}</p>
+<p><a href="{{ url('/account/shop/import/template') }}">{{ trans('shop.import.template') }}</a></p>
+
+<form method="post" action="{{ url('/account/shop/import') }}" enctype="multipart/form-data" class="stack-form">
+    {{ csrf_field() }}
+    <label for="file">{{ trans('shop.import.file') }}</label>
+    <input id="file" name="file" type="file" accept=".csv,text/csv" required>
+    <button type="submit">{{ trans('shop.import.submit') }}</button>
+</form>
+
+{% if result %}
+    <section class="card-box">
+        <h2>{{ trans('shop.import.result') }}</h2>
+        <p>{{ trans('shop.import.summary', {created: result.created, variants: result.variants}) }}</p>
+
+        {% if result.skipped is not empty %}
+            <h3>{{ trans('shop.import.skipped_title') }}</h3>
+            <ul>
+                {% for title in result.skipped %}
+                    <li>{{ trans('shop.import.skipped', {product: title}) }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if result.errors is not empty %}
+            <h3>{{ trans('shop.import.errors_title') }}</h3>
+            <ul>
+                {% for error in result.errors %}
+                    <li class="flash flash-error">
+                        {% if error.row %}
+                            {{ trans(error.key, {product: error.product, row: error.row}) }}
+                        {% else %}
+                            {{ trans(error.key, {product: error.product}) }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+{% endif %}
+
+<h2>{{ trans('shop.import.help_title') }}</h2>
+<p>{{ trans('shop.import.help_columns') }}</p>
+<ul>
+    <li>{{ trans('shop.import.help_product') }}</li>
+    <li>{{ trans('shop.import.help_category') }}</li>
+    <li>{{ trans('shop.import.help_summary') }}</li>
+    <li>{{ trans('shop.import.help_variant_label') }}</li>
+    <li>{{ trans('shop.import.help_sku') }}</li>
+    <li>{{ trans('shop.import.help_price') }}</li>
+    <li>{{ trans('shop.import.help_stock') }}</li>
+    <li>{{ trans('shop.import.help_digital') }}</li>
+</ul>
+{% endblock %}

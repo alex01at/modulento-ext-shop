@@ -23,6 +23,16 @@ confirmed automatically after 14 days), and either side can propose a
 cancellation the other agrees to or refuses - the same shape Modulento's own
 Requests feature uses. A cancelled order gives its stock back.
 
+**CSV import** (**account → Produkte importieren**, `/account/shop/import`):
+creates products in bulk from a CSV file - one row per variant, several rows
+with the same `product` column become one product with several variants.
+Create-only: a product whose title already exists for this provider is
+skipped rather than merged or updated, so importing the same file twice is
+harmless. Everything goes through the normal `Variants`/`Offers` code the
+product form itself uses, including the SKU-uniqueness check and the usual
+pending/published approval decision - a second language needs a second
+import, with the locale switched beforehand.
+
 This extension is built for exactly one approved provider - the shop's
 operator. Nothing stops installing it with more than one, but a cart that
 somehow holds products from different providers is refused at checkout
