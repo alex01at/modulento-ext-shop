@@ -143,6 +143,10 @@ return [
     'shop.import.help_stock' => 'stock – stock count (meaningless for digital products).',
     'shop.import.help_digital' => 'digital – "1" or "yes" for a digital product with no shipping or stock.',
 
+    // Module
+    'shop.module.discounts.name' => 'Discount codes',
+    'shop.module.discounts.description' => 'Discount codes in the cart that reduce the product price by a flat amount or a percentage.',
+
     // Navigation, permission
     'shop.nav.cart' => 'Cart',
     'shop.nav.import' => 'Import products',

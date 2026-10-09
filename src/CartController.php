@@ -17,8 +17,12 @@ final class CartController extends Controller
         $items = $cart->items($accountId, $app);
         $subtotal = array_sum(array_column($items, 'line_total'));
 
+        // Switched off, a code applied to the cart while the module was on
+        // is simply ignored from here on - applying one never reserves
+        // anything (only checkout does), so there is nothing to release.
+        $discountsEnabled = $app->modules->enabled('shop.discounts');
         $discountService = new Discounts($app->db);
-        $applied = (new CartDiscount($app->db))->find($accountId);
+        $applied = $discountsEnabled ? (new CartDiscount($app->db))->find($accountId) : null;
         $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
         $discountProblem = $discount !== null ? $discountService->problem($discount, $subtotal) : null;
         $discountAmount = $discount !== null && $discountProblem === null ? $discountService->amount($discount, $subtotal) : 0;
@@ -26,6 +30,7 @@ final class CartController extends Controller
         $this->render('@shop/cart.twig', [
             'items' => $items,
             'subtotal' => $subtotal,
+            'discounts_enabled' => $discountsEnabled,
             'discount_code' => $discount['code'] ?? null,
             'discount_amount' => $discountAmount,
             'discount_problem' => $discountProblem !== null ? $this->trans($discountProblem) : null,

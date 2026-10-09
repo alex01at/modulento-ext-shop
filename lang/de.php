@@ -143,6 +143,10 @@ return [
     'shop.import.help_stock' => 'stock – Lagerbestand (bei digitalen Produkten ohne Bedeutung).',
     'shop.import.help_digital' => 'digital – „1" oder „ja" für ein digitales Produkt ohne Versand und Lagerbestand.',
 
+    // Module
+    'shop.module.discounts.name' => 'Rabattcodes',
+    'shop.module.discounts.description' => 'Rabattcodes im Warenkorb, die den Produktpreis um einen festen Betrag oder Prozentsatz senken.',
+
     // Navigation, permission
     'shop.nav.cart' => 'Warenkorb',
     'shop.nav.import' => 'Produkte importieren',

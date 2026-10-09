@@ -32,22 +32,35 @@ final class Extension implements ExtensionContract
         $registrar->offerType($type);
         $registrar->orderFlow(new ShopFlow($type));
 
-        $registrar->routes(function (Router $router): void {
+        // Discount codes as their own module (Administration → Modules):
+        // switched off, the cart's "apply a code" form and the admin
+        // discounts page are both gone, and nothing is prorated at
+        // checkout any more - but existing codes and their usage counts
+        // stay in x_shop_discount, untouched, for whenever it is switched
+        // back on. Only ever listed there while the shop extension itself
+        // is active, since this call is what adds it.
+        $registrar->module('shop.discounts', 'shop.module.discounts');
+        $discountsEnabled = $registrar->moduleEnabled('shop.discounts');
+
+        $registrar->routes(function (Router $router) use ($discountsEnabled): void {
             $router->get('/cart', [CartController::class, 'show']);
             $router->post('/cart/add', [CartController::class, 'add']);
             $router->post('/cart/{id}/update', [CartController::class, 'update']);
             $router->post('/cart/{id}/remove', [CartController::class, 'remove']);
-            $router->post('/cart/discount', [CartController::class, 'applyDiscount']);
-            $router->post('/cart/discount/remove', [CartController::class, 'removeDiscount']);
             $router->get('/checkout', [CheckoutController::class, 'show']);
             $router->post('/checkout', [CheckoutController::class, 'place']);
 
             $router->get('/admin/shop/settings', [AdminShopController::class, 'edit'], 'shop.settings.manage');
             $router->post('/admin/shop/settings', [AdminShopController::class, 'save'], 'shop.settings.manage');
-            $router->get('/admin/shop/discounts', [AdminDiscountController::class, 'index'], 'shop.settings.manage');
-            $router->post('/admin/shop/discounts', [AdminDiscountController::class, 'create'], 'shop.settings.manage');
-            $router->post('/admin/shop/discounts/{id}/toggle', [AdminDiscountController::class, 'toggle'], 'shop.settings.manage');
-            $router->post('/admin/shop/discounts/{id}/delete', [AdminDiscountController::class, 'delete'], 'shop.settings.manage');
+
+            if ($discountsEnabled) {
+                $router->post('/cart/discount', [CartController::class, 'applyDiscount']);
+                $router->post('/cart/discount/remove', [CartController::class, 'removeDiscount']);
+                $router->get('/admin/shop/discounts', [AdminDiscountController::class, 'index'], 'shop.settings.manage');
+                $router->post('/admin/shop/discounts', [AdminDiscountController::class, 'create'], 'shop.settings.manage');
+                $router->post('/admin/shop/discounts/{id}/toggle', [AdminDiscountController::class, 'toggle'], 'shop.settings.manage');
+                $router->post('/admin/shop/discounts/{id}/delete', [AdminDiscountController::class, 'delete'], 'shop.settings.manage');
+            }
 
             $router->post('/account/shop/variants/{id}/file', [DownloadController::class, 'upload']);
             $router->post('/account/shop/variants/{id}/file/delete', [DownloadController::class, 'deleteFile']);
@@ -74,7 +87,9 @@ final class Extension implements ExtensionContract
 
         $registrar->permission('shop.settings.manage', 'shop.permission.settings');
         $registrar->adminMenu('shop.admin.menu.settings', '/admin/shop/settings', 'shop.settings.manage', 'marketplace');
-        $registrar->adminMenu('shop.admin.menu.discounts', '/admin/shop/discounts', 'shop.settings.manage', 'marketplace');
+        if ($discountsEnabled) {
+            $registrar->adminMenu('shop.admin.menu.discounts', '/admin/shop/discounts', 'shop.settings.manage', 'marketplace');
+        }
 
         // A cancelled order gives its stock back. Placing an order already
         // reserves stock itself (CheckoutController, before Orders::create()

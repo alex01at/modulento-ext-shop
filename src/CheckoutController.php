@@ -89,7 +89,7 @@ final class CheckoutController extends Controller
         $subtotal = array_sum(array_column($items, 'line_total'));
 
         $discountService = new Discounts($app->db);
-        $applied = (new CartDiscount($app->db))->find($accountId);
+        $applied = $app->modules->enabled('shop.discounts') ? (new CartDiscount($app->db))->find($accountId) : null;
         $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
         $discountAmount = 0;
         if ($discount !== null) {
@@ -174,7 +174,7 @@ final class CheckoutController extends Controller
         $subtotal = array_sum(array_column($items, 'line_total'));
 
         $discountService = new Discounts($app->db);
-        $applied = (new CartDiscount($app->db))->find($this->accountId());
+        $applied = $app->modules->enabled('shop.discounts') ? (new CartDiscount($app->db))->find($this->accountId()) : null;
         $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
         $discountProblem = $discount !== null ? $discountService->problem($discount, $subtotal) : null;
         $discountAmount = $discount !== null && $discountProblem === null ? $discountService->amount($discount, $subtotal) : 0;

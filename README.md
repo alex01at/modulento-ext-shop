@@ -49,6 +49,13 @@ in the core, so a discount can never be its own negative line - instead
 the subtotal, splitting a line into two rows where the reduction does not
 divide evenly by its quantity, so the total is exact to the cent.
 
+Discount codes are their own module, listed under **Administration →
+Modules** - on by default, alongside the core's own modules, only while this
+extension itself is active. Switched off, the cart's "enter a code" field
+and the admin discounts page are both gone, and checkout no longer prorates
+anything; existing codes and their redemption counts stay untouched for
+whenever it is switched back on.
+
 **Digital products**: a variant can be marked digital on the offer form
 (**no shipping, no stock to run out of**) and, once saved, gets a file
 uploaded to it on the same page. A cart with nothing physical in it is not
