@@ -13,7 +13,7 @@
         <thead>
             <tr>
                 <th>{{ trans('shop.cart.product') }}</th>
-                <th>{{ trans('shop.form.price') }}</th>
+                <th>{{ trans('shop.cart.unit_price') }}</th>
                 <th>{{ trans('shop.detail.quantity') }}</th>
                 <th>{{ trans('shop.cart.line_total') }}</th>
                 <th></th>
@@ -46,6 +46,26 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <p>{{ trans('shop.cart.subtotal') }}: {{ money(subtotal, items[0].currency) }}</p>
+
+    {% if discount_code %}
+        <p>
+            {{ trans('shop.discount.applied_as', {code: discount_code, amount: money(discount_amount, items[0].currency)}) }}
+            {% if discount_problem %}<br><small>{{ discount_problem }}</small>{% endif %}
+            <form method="post" action="{{ url('/cart/discount/remove') }}" class="inline-form">
+                {{ csrf_field() }}
+                <button type="submit" class="link-button">{{ trans('shop.discount.remove') }}</button>
+            </form>
+        </p>
+    {% else %}
+        <form method="post" action="{{ url('/cart/discount') }}" class="inline-form">
+            {{ csrf_field() }}
+            <label for="discount-code">{{ trans('shop.discount.label') }}</label>
+            <input id="discount-code" name="code" maxlength="32">
+            <button type="submit">{{ trans('shop.discount.apply') }}</button>
+        </form>
+    {% endif %}
 
     <p><strong>{{ trans('shop.cart.total') }}: {{ money(total, items[0].currency) }}</strong></p>
     <p><a class="button" href="{{ url('/checkout') }}">{{ trans('shop.cart.checkout') }}</a></p>

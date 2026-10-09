@@ -1,7 +1,7 @@
 {
     "id": "shop",
     "name": "Shop",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "requires": "0.47.0",
     "api": 1,
     "namespace": "Modulento\\Shop"

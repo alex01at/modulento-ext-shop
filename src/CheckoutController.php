@@ -86,14 +86,41 @@ final class CheckoutController extends Controller
         $provider = $app->providers->find($providerId);
         $currency = $items[0]['currency'];
         $shipping = $this->shippingFlat($app);
+        $subtotal = array_sum(array_column($items, 'line_total'));
 
-        $orderItems = array_map(fn (array $item) => [
+        $discountService = new Discounts($app->db);
+        $applied = (new CartDiscount($app->db))->find($accountId);
+        $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
+        $discountAmount = 0;
+        if ($discount !== null) {
+            if ($discountService->problem($discount, $subtotal) !== null) {
+                // No longer valid (expired, used up, subtotal dropped below
+                // the minimum since it was applied) - silently drop it
+                // rather than block the checkout on something the buyer
+                // cannot fix here.
+                (new CartDiscount($app->db))->remove($accountId);
+                $discount = null;
+            } else {
+                $discountAmount = $discountService->amount($discount, $subtotal);
+            }
+        }
+
+        $lines = array_map(fn (array $item) => [
             'label' => $item['title'] . ' — ' . $item['label'],
             'quantity' => $item['quantity'],
             'unit_price' => $item['unit_price'],
         ], $items);
+        $orderItems = $discountAmount > 0 ? $discountService->apply($lines, $discountAmount) : $lines;
         if ($shipping > 0) {
             $orderItems[] = ['label' => $this->trans('shop.checkout.shipping'), 'quantity' => 1, 'unit_price' => $shipping];
+        }
+
+        if ($discount !== null && !$discountService->reserve($discount['id'])) {
+            // Taken by someone else between the check above and now.
+            (new CartDiscount($app->db))->remove($accountId);
+            Session::flash('error', $this->trans('shop.discount.error.used_up'));
+            $this->redirect('/cart');
+            return;
         }
 
         $orderId = $app->orders->create(
@@ -102,7 +129,13 @@ final class CheckoutController extends Controller
             $this->trans('shop.checkout.order_title'),
             $app->orders->flow(ShopFlow::ID),
             $orderItems,
-            ['shipping' => $shipping, 'lines' => array_map(fn (array $item) => ['variant_id' => $item['variant_id'], 'quantity' => $item['quantity']], $items)],
+            [
+                'shipping' => $shipping,
+                'lines' => array_map(fn (array $item) => ['variant_id' => $item['variant_id'], 'quantity' => $item['quantity']], $items),
+                'discount_id' => $discount['id'] ?? null,
+                'discount_code' => $discount['code'] ?? null,
+                'discount_amount' => $discountAmount,
+            ],
             $methodId,
             $locale,
             null,
@@ -110,6 +143,7 @@ final class CheckoutController extends Controller
         );
 
         $cart->removeMany($accountId, array_column($items, 'id'));
+        (new CartDiscount($app->db))->remove($accountId);
 
         $order = $app->orders->find($orderId);
         OrderNotifier::stateChanged($app, null, $order, 'place', 'buyer', null);
@@ -137,12 +171,22 @@ final class CheckoutController extends Controller
         $locale = $app->translator->locale();
         $shipping = $this->shippingFlat($app);
         $methods = $app->payments->availableFor($providerId, $app);
+        $subtotal = array_sum(array_column($items, 'line_total'));
+
+        $discountService = new Discounts($app->db);
+        $applied = (new CartDiscount($app->db))->find($this->accountId());
+        $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
+        $discountProblem = $discount !== null ? $discountService->problem($discount, $subtotal) : null;
+        $discountAmount = $discount !== null && $discountProblem === null ? $discountService->amount($discount, $subtotal) : 0;
 
         $this->render('@shop/checkout.twig', [
             'items' => $items,
-            'subtotal' => array_sum(array_column($items, 'line_total')),
+            'subtotal' => $subtotal,
+            'discount_code' => $discount['code'] ?? null,
+            'discount_amount' => $discountAmount,
+            'discount_problem' => $discountProblem !== null ? $this->trans($discountProblem) : null,
             'shipping' => $shipping,
-            'total' => array_sum(array_column($items, 'line_total')) + $shipping,
+            'total' => $subtotal - $discountAmount + $shipping,
             'currency' => $items[0]['currency'],
             'methods' => array_map(fn ($m) => ['id' => $m->id(), 'label_key' => $m->labelKey()], $methods),
             'payment_method' => $paymentMethod,

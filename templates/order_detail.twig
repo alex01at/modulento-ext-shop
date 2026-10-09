@@ -1,4 +1,7 @@
 {# Included on the order page. Receives flow_data. #}
+{% if flow_data.discount_code %}
+    <p>{{ trans('shop.discount.applied_as', {code: flow_data.discount_code, amount: money(flow_data.discount_amount, order.currency)}) }}</p>
+{% endif %}
 {% if flow_data.shipping > 0 %}
     <p>{{ trans('shop.order.shipping_charged', {amount: money(flow_data.shipping, order.currency)}) }}</p>
 {% endif %}

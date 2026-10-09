@@ -33,6 +33,7 @@ return [
     'shop.cart.empty' => 'Your cart is empty.',
     'shop.cart.browse' => 'Browse products',
     'shop.cart.product' => 'Product',
+    'shop.cart.unit_price' => 'Price',
     'shop.cart.line_total' => 'Total',
     'shop.cart.total' => 'Grand total',
     'shop.cart.update' => 'Update',
@@ -44,6 +45,19 @@ return [
     'shop.cart.error.gone' => 'This variant no longer exists.',
     'shop.cart.error.quantity' => 'The quantity is not valid.',
     'shop.cart.error.stock' => 'Not enough in stock.',
+    'shop.cart.subtotal' => 'Subtotal',
+
+    // Discount codes
+    'shop.discount.label' => 'Discount code',
+    'shop.discount.apply' => 'Apply',
+    'shop.discount.remove' => 'Remove',
+    'shop.discount.applied' => 'Discount code applied.',
+    'shop.discount.applied_as' => 'Discount ({code}): −{amount}',
+    'shop.discount.error.not_found' => 'This discount code does not exist.',
+    'shop.discount.error.inactive' => 'This discount code is no longer active.',
+    'shop.discount.error.expired' => 'This discount code has expired.',
+    'shop.discount.error.used_up' => 'This discount code has already been redeemed too often.',
+    'shop.discount.error.min_subtotal' => 'Your cart is not large enough yet for this discount code.',
 
     // Checkout
     'shop.checkout.title' => 'Checkout',
@@ -87,6 +101,7 @@ return [
     'shop.nav.cart' => 'Cart',
     'shop.permission.settings' => 'Manage shop settings',
     'shop.admin.menu.settings' => 'Shop',
+    'shop.admin.menu.discounts' => 'Discount codes',
 
     // Admin settings
     'shop.admin.settings.title' => 'Shop settings',
@@ -95,4 +110,31 @@ return [
     'shop.admin.settings.save' => 'Save',
     'shop.admin.error.shipping' => 'The shipping rate is not valid.',
     'shop.admin.saved' => 'Saved.',
+
+    // Admin discounts
+    'shop.discount.admin.title' => 'Discount codes',
+    'shop.discount.admin.new' => 'New discount code',
+    'shop.discount.admin.code' => 'Code',
+    'shop.discount.admin.type' => 'Type',
+    'shop.discount.type.percent' => 'Percent',
+    'shop.discount.type.flat' => 'Flat amount',
+    'shop.discount.admin.value' => 'Value ({currency} for a flat amount, otherwise %)',
+    'shop.discount.admin.expires_at' => 'Valid until',
+    'shop.discount.admin.max_uses' => 'Maximum redemptions',
+    'shop.discount.admin.min_subtotal' => 'Minimum order value ({currency})',
+    'shop.discount.admin.active' => 'Active',
+    'shop.discount.admin.create' => 'Create',
+    'shop.discount.admin.none' => 'No discount codes yet.',
+    'shop.discount.admin.used' => 'Redeemed',
+    'shop.discount.admin.inactive' => 'inactive',
+    'shop.discount.admin.deactivate' => 'Deactivate',
+    'shop.discount.admin.activate' => 'Activate',
+    'shop.discount.admin.delete' => 'Delete',
+    'shop.discount.admin.created' => 'Discount code created.',
+    'shop.discount.admin.deleted' => 'Discount code deleted.',
+    'shop.discount.error.code' => 'The code may only contain letters, digits and "-" (2 to 32 characters).',
+    'shop.discount.error.code_taken' => 'This code is already in use.',
+    'shop.discount.error.value' => 'The value is not valid.',
+    'shop.discount.error.max_uses' => 'The maximum number of redemptions is not valid.',
+    'shop.discount.error.min_subtotal_invalid' => 'The minimum order value is not valid.',
 ];

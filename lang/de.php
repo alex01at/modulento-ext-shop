@@ -33,6 +33,7 @@ return [
     'shop.cart.empty' => 'Dein Warenkorb ist leer.',
     'shop.cart.browse' => 'Produkte ansehen',
     'shop.cart.product' => 'Produkt',
+    'shop.cart.unit_price' => 'Preis',
     'shop.cart.line_total' => 'Summe',
     'shop.cart.total' => 'Gesamtsumme',
     'shop.cart.update' => 'Aktualisieren',
@@ -44,6 +45,19 @@ return [
     'shop.cart.error.gone' => 'Diese Variante gibt es nicht mehr.',
     'shop.cart.error.quantity' => 'Die Menge ist ungültig.',
     'shop.cart.error.stock' => 'Nicht genug auf Lager.',
+    'shop.cart.subtotal' => 'Zwischensumme',
+
+    // Discount codes
+    'shop.discount.label' => 'Rabattcode',
+    'shop.discount.apply' => 'Anwenden',
+    'shop.discount.remove' => 'Entfernen',
+    'shop.discount.applied' => 'Rabattcode angewendet.',
+    'shop.discount.applied_as' => 'Rabatt ({code}): −{amount}',
+    'shop.discount.error.not_found' => 'Diesen Rabattcode gibt es nicht.',
+    'shop.discount.error.inactive' => 'Dieser Rabattcode ist nicht mehr aktiv.',
+    'shop.discount.error.expired' => 'Dieser Rabattcode ist abgelaufen.',
+    'shop.discount.error.used_up' => 'Dieser Rabattcode wurde bereits zu oft eingelöst.',
+    'shop.discount.error.min_subtotal' => 'Für diesen Rabattcode ist der Warenkorb noch nicht groß genug.',
 
     // Checkout
     'shop.checkout.title' => 'Kasse',
@@ -87,6 +101,7 @@ return [
     'shop.nav.cart' => 'Warenkorb',
     'shop.permission.settings' => 'Shop-Einstellungen verwalten',
     'shop.admin.menu.settings' => 'Shop',
+    'shop.admin.menu.discounts' => 'Rabattcodes',
 
     // Admin settings
     'shop.admin.settings.title' => 'Shop-Einstellungen',
@@ -95,4 +110,31 @@ return [
     'shop.admin.settings.save' => 'Speichern',
     'shop.admin.error.shipping' => 'Die Versandpauschale ist ungültig.',
     'shop.admin.saved' => 'Gespeichert.',
+
+    // Admin discounts
+    'shop.discount.admin.title' => 'Rabattcodes',
+    'shop.discount.admin.new' => 'Neuer Rabattcode',
+    'shop.discount.admin.code' => 'Code',
+    'shop.discount.admin.type' => 'Art',
+    'shop.discount.type.percent' => 'Prozent',
+    'shop.discount.type.flat' => 'Fester Betrag',
+    'shop.discount.admin.value' => 'Wert ({currency} bei festem Betrag, sonst %)',
+    'shop.discount.admin.expires_at' => 'Gültig bis',
+    'shop.discount.admin.max_uses' => 'Maximale Einlösungen',
+    'shop.discount.admin.min_subtotal' => 'Mindestbestellwert ({currency})',
+    'shop.discount.admin.active' => 'Aktiv',
+    'shop.discount.admin.create' => 'Anlegen',
+    'shop.discount.admin.none' => 'Noch keine Rabattcodes angelegt.',
+    'shop.discount.admin.used' => 'Eingelöst',
+    'shop.discount.admin.inactive' => 'inaktiv',
+    'shop.discount.admin.deactivate' => 'Deaktivieren',
+    'shop.discount.admin.activate' => 'Aktivieren',
+    'shop.discount.admin.delete' => 'Löschen',
+    'shop.discount.admin.created' => 'Rabattcode angelegt.',
+    'shop.discount.admin.deleted' => 'Rabattcode gelöscht.',
+    'shop.discount.error.code' => 'Der Code darf nur Buchstaben, Ziffern und „-" enthalten (2 bis 32 Zeichen).',
+    'shop.discount.error.code_taken' => 'Dieser Code wird bereits verwendet.',
+    'shop.discount.error.value' => 'Der Wert ist ungültig.',
+    'shop.discount.error.max_uses' => 'Die maximale Anzahl Einlösungen ist ungültig.',
+    'shop.discount.error.min_subtotal_invalid' => 'Der Mindestbestellwert ist ungültig.',
 ];

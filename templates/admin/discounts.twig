@@ -1,0 +1,94 @@
+{% extends '@admin/layout.twig' %}
+
+{% block title %}{{ trans('shop.discount.admin.title') }} – {{ site_name }}{% endblock %}
+
+{% block admin %}
+{% include '@admin/_page_header.twig' with {heading: trans('shop.discount.admin.title')} only %}
+
+{% for error in errors %}
+    <p class="flash flash-error" role="alert">{{ error }}</p>
+{% endfor %}
+
+<section class="card-box">
+    <div class="card-head">
+        <h2>{{ trans('shop.discount.admin.new') }}</h2>
+    </div>
+    <form method="post" action="{{ url('/admin/shop/discounts') }}" class="field-grid">
+        {{ csrf_field() }}
+        <div class="field">
+            <label for="code">{{ trans('shop.discount.admin.code') }}</label>
+            <input id="code" name="code" maxlength="32" required placeholder="SOMMER10">
+        </div>
+        <div class="field">
+            <label for="type">{{ trans('shop.discount.admin.type') }}</label>
+            <select id="type" name="type">
+                <option value="percent">{{ trans('shop.discount.type.percent') }}</option>
+                <option value="flat">{{ trans('shop.discount.type.flat') }}</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="value">{{ trans('shop.discount.admin.value', {currency: currency}) }}</label>
+            <input id="value" name="value" inputmode="decimal" required>
+        </div>
+        <div class="field">
+            <label for="expires_at">{{ trans('shop.discount.admin.expires_at') }}</label>
+            <input id="expires_at" name="expires_at" type="date">
+        </div>
+        <div class="field">
+            <label for="max_uses">{{ trans('shop.discount.admin.max_uses') }}</label>
+            <input id="max_uses" name="max_uses" type="number" min="1">
+        </div>
+        <div class="field">
+            <label for="min_subtotal">{{ trans('shop.discount.admin.min_subtotal', {currency: currency}) }}</label>
+            <input id="min_subtotal" name="min_subtotal" inputmode="decimal">
+        </div>
+        <div class="field">
+            <label><input type="checkbox" name="active" value="1" checked> {{ trans('shop.discount.admin.active') }}</label>
+        </div>
+        <button type="submit">{{ trans('shop.discount.admin.create') }}</button>
+    </form>
+</section>
+
+<section class="card-box">
+    {% if discounts is empty %}
+        <p class="empty">{{ trans('shop.discount.admin.none') }}</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">{{ trans('shop.discount.admin.code') }}</th>
+                    <th scope="col">{{ trans('shop.discount.admin.value', {currency: currency}) }}</th>
+                    <th scope="col">{{ trans('shop.discount.admin.used') }}</th>
+                    <th scope="col">{{ trans('shop.discount.admin.expires_at') }}</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for discount in discounts %}
+                    <tr>
+                        <th scope="row">
+                            {{ discount.code }}
+                            {% if not discount.active %}<span class="badge">{{ trans('shop.discount.admin.inactive') }}</span>{% endif %}
+                        </th>
+                        <td>{{ discount.type == 'percent' ? discount.value ~ ' %' : money(discount.value, currency) }}</td>
+                        <td>{{ discount.used_count }}{% if discount.max_uses %} / {{ discount.max_uses }}{% endif %}</td>
+                        <td>{{ discount.expires_at ? discount.expires_at|slice(0, 10) : '—' }}</td>
+                        <td>
+                            <form method="post" action="{{ url('/admin/shop/discounts/' ~ discount.id ~ '/toggle') }}" class="inline-form">
+                                {{ csrf_field() }}
+                                <button type="submit" class="link-button">{{ trans(discount.active ? 'shop.discount.admin.deactivate' : 'shop.discount.admin.activate') }}</button>
+                            </form>
+                            <form method="post" action="{{ url('/admin/shop/discounts/' ~ discount.id ~ '/delete') }}" class="inline-form">
+                                {{ csrf_field() }}
+                                <button type="submit" class="link-button">{{ trans('shop.discount.admin.delete') }}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

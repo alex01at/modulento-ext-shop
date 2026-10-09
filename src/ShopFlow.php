@@ -118,9 +118,13 @@ final class ShopFlow implements OrderFlow
         return '@shop/order_detail.twig';
     }
 
-    /** @return array{shipping: int} the shipping flat fee charged, in minor units, kept at order time so a later change to the setting never alters a placed order */
+    /** @return array{shipping: int, discount_code: ?string, discount_amount: int} kept at order time so a later change to the shipping rate or the discount never alters a placed order */
     public function orderDetailData(array $order, string $locale, App $app): array
     {
-        return ['shipping' => (int) ($order['data']['shipping'] ?? 0)];
+        return [
+            'shipping' => (int) ($order['data']['shipping'] ?? 0),
+            'discount_code' => $order['data']['discount_code'] ?? null,
+            'discount_amount' => (int) ($order['data']['discount_amount'] ?? 0),
+        ];
     }
 }

@@ -12,6 +12,10 @@
 </ul>
 <p>
     {{ trans('shop.checkout.subtotal') }}: {{ money(subtotal, currency) }}<br>
+    {% if discount_code %}
+        {{ trans('shop.discount.applied_as', {code: discount_code, amount: money(discount_amount, currency)}) }}<br>
+        {% if discount_problem %}<small>{{ discount_problem }}</small><br>{% endif %}
+    {% endif %}
     {{ trans('shop.checkout.shipping') }}: {{ money(shipping, currency) }}<br>
     <strong>{{ trans('shop.checkout.total') }}: {{ money(total, currency) }}</strong>
 </p>

@@ -11,13 +11,59 @@ final class CartController extends Controller
 {
     public function show(array $params): void
     {
-        $cart = new Cart($this->app->db);
-        $items = $cart->items($this->accountId(), $this->app);
+        $app = $this->app;
+        $accountId = $this->accountId();
+        $cart = new Cart($app->db);
+        $items = $cart->items($accountId, $app);
+        $subtotal = array_sum(array_column($items, 'line_total'));
+
+        $discountService = new Discounts($app->db);
+        $applied = (new CartDiscount($app->db))->find($accountId);
+        $discount = $applied !== null ? $discountService->find($applied['discount_id']) : null;
+        $discountProblem = $discount !== null ? $discountService->problem($discount, $subtotal) : null;
+        $discountAmount = $discount !== null && $discountProblem === null ? $discountService->amount($discount, $subtotal) : 0;
 
         $this->render('@shop/cart.twig', [
             'items' => $items,
-            'total' => array_sum(array_column($items, 'line_total')),
+            'subtotal' => $subtotal,
+            'discount_code' => $discount['code'] ?? null,
+            'discount_amount' => $discountAmount,
+            'discount_problem' => $discountProblem !== null ? $this->trans($discountProblem) : null,
+            'total' => $subtotal - $discountAmount,
         ]);
+    }
+
+    public function applyDiscount(array $params): void
+    {
+        $app = $this->app;
+        $accountId = $this->accountId();
+        $code = trim((string) ($_POST['code'] ?? ''));
+        $discountService = new Discounts($app->db);
+        $discount = $code !== '' ? $discountService->findByCode($code) : null;
+
+        if ($discount === null) {
+            Session::flash('error', $this->trans('shop.discount.error.not_found'));
+            $this->redirect('/cart');
+            return;
+        }
+
+        $subtotal = array_sum(array_column((new Cart($app->db))->items($accountId, $app), 'line_total'));
+        $problem = $discountService->problem($discount, $subtotal);
+        if ($problem !== null) {
+            Session::flash('error', $this->trans($problem));
+            $this->redirect('/cart');
+            return;
+        }
+
+        (new CartDiscount($app->db))->set($accountId, $discount['id']);
+        Session::flash('success', $this->trans('shop.discount.applied'));
+        $this->redirect('/cart');
+    }
+
+    public function removeDiscount(array $params): void
+    {
+        (new CartDiscount($this->app->db))->remove($this->accountId());
+        $this->redirect('/cart');
     }
 
     public function add(array $params): void
