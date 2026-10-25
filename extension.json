@@ -1,7 +1,7 @@
 {
     "id": "shop",
     "name": "Shop",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "requires": "0.48.0",
     "api": 1,
     "description": "Turns the catalogue into a single-provider shop: products with variants, a cart and one checkout.",
